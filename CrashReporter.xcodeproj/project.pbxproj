@@ -1723,7 +1723,7 @@
 		057CD98516CD5D5C0067E670 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		0581B520168FDB280098C103 /* mach_exc.defs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.mig; name = mach_exc.defs; path = usr/include/mach/mach_exc.defs; sourceTree = SDKROOT; };
 		058484AD1804841100A56049 /* unwind_test_arm64_frameless.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = unwind_test_arm64_frameless.S; sourceTree = "<group>"; };
-		058812B91040582D009128FB /* CrashReporter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CrashReporter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		058812B91040582D009128FB /* KarteCrashReporter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KarteCrashReporter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		05920D1C1774E218001E8975 /* dwarf_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dwarf_private.h; sourceTree = "<group>"; };
 		05920D1E177B9257001E8975 /* PLCrashFrameDWARFUnwind.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PLCrashFrameDWARFUnwind.cpp; sourceTree = "<group>"; };
 		05920D1F177B9257001E8975 /* PLCrashFrameDWARFUnwind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLCrashFrameDWARFUnwind.h; sourceTree = "<group>"; };
@@ -1883,7 +1883,7 @@
 		2D0E10451141F7DC00CE1BD6 /* PLCrashReportProcessInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLCrashReportProcessInfo.m; sourceTree = "<group>"; };
 		8064D81B1C4D22D8005A8B4C /* libCrashReporter-appletvos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCrashReporter-appletvos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8064D88A1C4D22DA005A8B4C /* libCrashReporter-appletvsimulator.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCrashReporter-appletvsimulator.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8064D8BB1C4D22E5005A8B4C /* CrashReporter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CrashReporter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8064D8BB1C4D22E5005A8B4C /* KarteCrashReporter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KarteCrashReporter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8064D9261C4D27DF005A8B4C /* Tests-tvOS-Simulator.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests-tvOS-Simulator.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8064D9951C4D27E2005A8B4C /* Tests-tvOS-Device.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests-tvOS-Device.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8064D9A31C4D27E9005A8B4C /* DemoCrash-tvOS-Device.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DemoCrash-tvOS-Device.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2078,12 +2078,12 @@
 				05E731E30EFA1A3E005EDFB7 /* plcrashutil */,
 				05E731F30EFA1AAB005EDFB7 /* libCrashReporter-MacOSX-Static.a */,
 				050DE24D0F61B80B00152ED3 /* Fuzz Testing */,
-				058812B91040582D009128FB /* CrashReporter.framework */,
+				058812B91040582D009128FB /* KarteCrashReporter.framework */,
 				052A45CF136353FB00987004 /* DemoCrash-iOS-Device.app */,
 				052A464F136355FD00987004 /* DemoCrash-iOS-Simulator.app */,
 				8064D81B1C4D22D8005A8B4C /* libCrashReporter-appletvos.a */,
 				8064D88A1C4D22DA005A8B4C /* libCrashReporter-appletvsimulator.a */,
-				8064D8BB1C4D22E5005A8B4C /* CrashReporter.framework */,
+				8064D8BB1C4D22E5005A8B4C /* KarteCrashReporter.framework */,
 				8064D9261C4D27DF005A8B4C /* Tests-tvOS-Simulator.xctest */,
 				8064D9951C4D27E2005A8B4C /* Tests-tvOS-Device.xctest */,
 				8064D9A31C4D27E9005A8B4C /* DemoCrash-tvOS-Device.app */,
@@ -3216,7 +3216,7 @@
 			);
 			name = "CrashReporter-iOS";
 			productName = "PLCrashReporter-iPhone";
-			productReference = 058812B91040582D009128FB /* CrashReporter.framework */;
+			productReference = 058812B91040582D009128FB /* KarteCrashReporter.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		05CD31510EE936A9000FDE88 /* CrashReporter-iOS-Device */ = {
@@ -3426,7 +3426,7 @@
 			);
 			name = "CrashReporter-tvOS";
 			productName = "PLCrashReporter-iPhone";
-			productReference = 8064D8BB1C4D22E5005A8B4C /* CrashReporter.framework */;
+			productReference = 8064D8BB1C4D22E5005A8B4C /* KarteCrashReporter.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		8064D8BD1C4D27DF005A8B4C /* Tests-tvOS-Simulator */ = {
@@ -3727,7 +3727,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Attempt to verify that the code we're building matches the source archive we're generating\n# We only check for local modifications; in theory, we could assert the existence of a (local, not yet pushed)\n# release tag.\nif [ \"${PL_ALLOW_LOCAL_MODS}\" != 1 ] && [ \"${CONFIGURATION}\" = \"Release\" ]; then\n    if [ \"$(git status --porcelain | grep -v '??' | wc -l | awk '{print $1}')\" != \"0\" ]; then\n        echo \"\" >/dev/stderr\n        echo \"=== RELEASE BUILD ERROR ===\" >/dev/stderr\n        echo \"Local modifications are not permitted when generating a Release build.\" >/dev/stderr\n        echo \"Modifications:\" >/dev/stderr\n        git status --porcelain | grep -v '??' >/dev/stderr\n\n        echo \"\" >/dev/stderr\n        echo \"Set the PL_ALLOW_LOCAL_MODS=1 to bypass this check, or use a non-release build configuration:\" >/dev/stderr\n        echo \"  env PL_ALLOW_LOCAL_MODS=1 xcodebuild ...\" >/dev/stderr\n        echo \"=== RELEASE BUILD ERROR ===\" >/dev/stderr\n        echo \"\" >/dev/stderr\n\n        exit 1\n    fi\nfi\n\n# Set up the destroot\nOUTPUT_DEST=\"${BUILT_PRODUCTS_DIR}\"\nPRODUCT_DIR=\"${PRODUCT_NAME}-${CURRENT_PROJECT_VERSION}\"\nDESTROOT=\"${OUTPUT_DEST}/${PRODUCT_DIR}\"\n\nmkdir -p \"${DESTROOT}\"\n\n# Per-target installation destinations\nIPHONE_DEST=\"${DESTROOT}/iOS Framework\"\nAPPLETV_DEST=\"${DESTROOT}/tvOS Framework\"\nMAC_DEST=\"${DESTROOT}/Mac OS X Framework\"\nTOOL_DEST=\"${DESTROOT}/Tools\"\nSRC_DEST=\"${DESTROOT}/Source\"\nLICENSE_DEST=\"${DESTROOT}/LICENSE.txt\"\n\nDOC_SUBDIR=\"Documentation\"\nDOC_DEST=\"${DESTROOT}/${DOC_SUBDIR}\"\n\n# Per-platform framework sources\nMAC_SRC=\"${BUILD_DIR}/${CONFIGURATION}-MacOSX\"\nIPHONE_SRC=\"${BUILD_DIR}/${CONFIGURATION}-iphone\"\nAPPLETV_SRC=\"${BUILD_DIR}/${CONFIGURATION}-appletv\"\n\n# Populate the destroot\nmkdir -p \"${IPHONE_DEST}\" || exit 1\nrsync -av \"${IPHONE_SRC}/CrashReporter.framework\" \"${IPHONE_DEST}\" || exit 1\n\nmkdir -p \"${APPLETV_DEST}\" || exit 1\nrsync -av \"${APPLETV_SRC}/CrashReporter.framework\" \"${APPLETV_DEST}\" || exit 1\n\nmkdir -p \"${MAC_DEST}\" || exit 1\nrsync -av \"${MAC_SRC}/CrashReporter.framework\" \"${MAC_SRC}/CrashReporter.framework.dSYM\" \"${MAC_DEST}\" || exit 1\n\nmkdir -p \"${TOOL_DEST}\" || exit 1\ninstall -m 755 \"${BUILD_DIR}/${CONFIGURATION}-MacOSX/plcrashutil\" \"${TOOL_DEST}\" || exit 1\n\nmkdir -p \"${SRC_DEST}\" || exit 1\ngit archive --format=tar --prefix=\"plcrashreporter-${CURRENT_PROJECT_VERSION}/\" HEAD | tar -C \"${SRC_DEST}\" -xf - || exit 1\n\nrsync -av \"${SRCROOT}/LICENSE\" \"${LICENSE_DEST}\"\n\n# Doxygen could be in /usr/local/bin (Homebrew) or /opt/local/bin (MacPorts)\n# and those don't seem to be in PATH\nexport PATH=$PATH:/usr/local/bin:/opt/local/bin\n\nif [ ! -z `which doxygen` ]; then\n    # Generate the documentation\n\tpushd \"${SRCROOT}\" >/dev/null || exit 1\n    doxygen\n    if [ $? != 0 ]; then\n        echo \"ERROR: Documentation generation failed\" >/dev/stderr\n        exit 1\n    fi\n\tpopd >/dev/null\n\n    # Populate the Documentation directory\n\trm -rf \"${DOC_DEST}\"\n    mv Documentation/API \"${DOC_DEST}\"\n\n    # Add a top-level Documentation symlink\n    pushd \"${DESTROOT}\" >/dev/null\n    ln -sf \"${DOC_SUBDIR}/index.html\" \"API Documentation.html\"\n    popd >/dev/null\nelse\n    echo \"WARNING: Doxygen not available, skipping documentation generation\" >/dev/stderr\nfi\n\n# Create the disk image\nrm -f \"${DESTROOT}.dmg\"\nhdiutil create -srcfolder \"${DESTROOT}\" \"${DESTROOT}.dmg\" || exit 1\n\n# Create the ZIP archive\nrm -f \"${DESTROOT}.zip\"\npushd \"${OUTPUT_DEST}\" >/dev/null\nzip --symlinks -r \"${PRODUCT_DIR}.zip\" \"${PRODUCT_DIR}\" || exit 1\npopd >/dev/null\n";
+			shellScript = "# Attempt to verify that the code we're building matches the source archive we're generating\n# We only check for local modifications; in theory, we could assert the existence of a (local, not yet pushed)\n# release tag.\nif [ \"${PL_ALLOW_LOCAL_MODS}\" != 1 ] && [ \"${CONFIGURATION}\" = \"Release\" ]; then\n    if [ \"$(git status --porcelain | grep -v '??' | wc -l | awk '{print $1}')\" != \"0\" ]; then\n        echo \"\" >/dev/stderr\n        echo \"=== RELEASE BUILD ERROR ===\" >/dev/stderr\n        echo \"Local modifications are not permitted when generating a Release build.\" >/dev/stderr\n        echo \"Modifications:\" >/dev/stderr\n        git status --porcelain | grep -v '??' >/dev/stderr\n\n        echo \"\" >/dev/stderr\n        echo \"Set the PL_ALLOW_LOCAL_MODS=1 to bypass this check, or use a non-release build configuration:\" >/dev/stderr\n        echo \"  env PL_ALLOW_LOCAL_MODS=1 xcodebuild ...\" >/dev/stderr\n        echo \"=== RELEASE BUILD ERROR ===\" >/dev/stderr\n        echo \"\" >/dev/stderr\n\n        exit 1\n    fi\nfi\n\n# Set up the destroot\nOUTPUT_DEST=\"${BUILT_PRODUCTS_DIR}\"\nPRODUCT_DIR=\"${PRODUCT_NAME}-${CURRENT_PROJECT_VERSION}\"\nDESTROOT=\"${OUTPUT_DEST}/${PRODUCT_DIR}\"\n\nmkdir -p \"${DESTROOT}\"\n\n# Per-target installation destinations\nIPHONE_DEST=\"${DESTROOT}/iOS Framework\"\nAPPLETV_DEST=\"${DESTROOT}/tvOS Framework\"\nMAC_DEST=\"${DESTROOT}/Mac OS X Framework\"\nTOOL_DEST=\"${DESTROOT}/Tools\"\nSRC_DEST=\"${DESTROOT}/Source\"\nLICENSE_DEST=\"${DESTROOT}/LICENSE.txt\"\n\nDOC_SUBDIR=\"Documentation\"\nDOC_DEST=\"${DESTROOT}/${DOC_SUBDIR}\"\n\n# Per-platform framework sources\nMAC_SRC=\"${BUILD_DIR}/${CONFIGURATION}-MacOSX\"\nIPHONE_SRC=\"${BUILD_DIR}/${CONFIGURATION}-iphone\"\nAPPLETV_SRC=\"${BUILD_DIR}/${CONFIGURATION}-appletv\"\n\n# Populate the destroot\nmkdir -p \"${IPHONE_DEST}\" || exit 1\nrsync -av \"${IPHONE_SRC}/KarteCrashReporter.framework\" \"${IPHONE_DEST}\" || exit 1\n\nmkdir -p \"${APPLETV_DEST}\" || exit 1\nrsync -av \"${APPLETV_SRC}/KarteCrashReporter.framework\" \"${APPLETV_DEST}\" || exit 1\n\nmkdir -p \"${MAC_DEST}\" || exit 1\nrsync -av \"${MAC_SRC}/CrashReporter.framework\" \"${MAC_SRC}/CrashReporter.framework.dSYM\" \"${MAC_DEST}\" || exit 1\n\nmkdir -p \"${TOOL_DEST}\" || exit 1\ninstall -m 755 \"${BUILD_DIR}/${CONFIGURATION}-MacOSX/plcrashutil\" \"${TOOL_DEST}\" || exit 1\n\nmkdir -p \"${SRC_DEST}\" || exit 1\ngit archive --format=tar --prefix=\"plcrashreporter-${CURRENT_PROJECT_VERSION}/\" HEAD | tar -C \"${SRC_DEST}\" -xf - || exit 1\n\nrsync -av \"${SRCROOT}/LICENSE\" \"${LICENSE_DEST}\"\n\n# Doxygen could be in /usr/local/bin (Homebrew) or /opt/local/bin (MacPorts)\n# and those don't seem to be in PATH\nexport PATH=$PATH:/usr/local/bin:/opt/local/bin\n\nif [ ! -z `which doxygen` ]; then\n    # Generate the documentation\n\tpushd \"${SRCROOT}\" >/dev/null || exit 1\n    doxygen\n    if [ $? != 0 ]; then\n        echo \"ERROR: Documentation generation failed\" >/dev/stderr\n        exit 1\n    fi\n\tpopd >/dev/null\n\n    # Populate the Documentation directory\n\trm -rf \"${DOC_DEST}\"\n    mv Documentation/API \"${DOC_DEST}\"\n\n    # Add a top-level Documentation symlink\n    pushd \"${DESTROOT}\" >/dev/null\n    ln -sf \"${DOC_SUBDIR}/index.html\" \"API Documentation.html\"\n    popd >/dev/null\nelse\n    echo \"WARNING: Doxygen not available, skipping documentation generation\" >/dev/stderr\nfi\n\n# Create the disk image\nrm -f \"${DESTROOT}.dmg\"\nhdiutil create -srcfolder \"${DESTROOT}\" \"${DESTROOT}.dmg\" || exit 1\n\n# Create the ZIP archive\nrm -f \"${DESTROOT}.zip\"\npushd \"${OUTPUT_DEST}\" >/dev/null\nzip --symlinks -r \"${PRODUCT_DIR}.zip\" \"${PRODUCT_DIR}\" || exit 1\npopd >/dev/null\n";
 		};
 		05CD32670EE93DC3000FDE88 /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3756,7 +3756,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "FRAMEWORK=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework\"\n\nlipo \\\n\t\"${BUILD_DIR}/${CONFIGURATION}-appletvos/libCrashReporter-AppleTVOS.a\" \\\n\t\"${BUILD_DIR}/${CONFIGURATION}-appletvsimulator/libCrashReporter-AppleTVSimulator.a\" \\\n\t-create -output \"${FRAMEWORK}/Versions/Current/${PRODUCT_NAME}\"\n\n# Strip debugging symbols\n#strip -S \"${FRAMEWORK}/Versions/Current/${PRODUCT_NAME}\"\n\ncd \"${FRAMEWORK}\" && ln -sf \"Versions/Current/${PRODUCT_NAME}\" ./";
+			shellScript = "FRAMEWORK=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework\"\n\nlipo \\\n\t\"${BUILD_DIR}/${CONFIGURATION}-appletvos/libCrashReporter-AppleTVOS.a\" \\\n\t\"${BUILD_DIR}/${CONFIGURATION}-appletvsimulator/libCrashReporter-AppleTVSimulator.a\" \\\n\t-create -output \"${FRAMEWORK}/Versions/Current/${PRODUCT_NAME}\"\n\n# Strip debugging symbols\n#strip -S \"${FRAMEWORK}/Versions/Current/${PRODUCT_NAME}\"\n\ncd \"${FRAMEWORK}\" && ln -sf \"Versions/Current/${PRODUCT_NAME}\" ./\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -5109,7 +5109,7 @@
 					Foundation,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "coop.plausible.${PRODUCT_NAME:identifier}";
-				PRODUCT_NAME = CrashReporter;
+				PRODUCT_NAME = KarteCrashReporter;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -5132,7 +5132,7 @@
 					Foundation,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "coop.plausible.${PRODUCT_NAME:identifier}";
-				PRODUCT_NAME = CrashReporter;
+				PRODUCT_NAME = KarteCrashReporter;
 				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
@@ -5876,7 +5876,7 @@
 					Foundation,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "coop.plausible.${PRODUCT_NAME:identifier}";
-				PRODUCT_NAME = CrashReporter;
+				PRODUCT_NAME = KarteCrashReporter;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -5899,7 +5899,7 @@
 					Foundation,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "coop.plausible.${PRODUCT_NAME:identifier}";
-				PRODUCT_NAME = CrashReporter;
+				PRODUCT_NAME = KarteCrashReporter;
 				SKIP_INSTALL = YES;
 				ZERO_LINK = NO;
 			};
