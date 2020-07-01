@@ -29,14 +29,14 @@
 #ifndef PLCRASH_FRAMEWALKER_H
 #define PLCRASH_FRAMEWALKER_H
 
-#import <sys/ucontext.h>
-#import <pthread.h>
+#include <sys/ucontext.h>
+#include <pthread.h>
 
-#import <stdint.h>
-#import <stdbool.h>
-#import <unistd.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <unistd.h>
 
-#import <mach/mach.h>
+#include <mach/mach.h>
 
 #include "PLCrashAsyncThread.h"
 #include "PLCrashAsyncImageList.h"
@@ -174,7 +174,7 @@ plframe_error_t plframe_cursor_next_with_readers (plframe_cursor_t *cursor, plfr
 
 void plframe_cursor_free(plframe_cursor_t *cursor);
 
-/**
+/*
  * @} plcrash_framewalker
  */
     

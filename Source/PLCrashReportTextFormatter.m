@@ -29,10 +29,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "CrashReporter/CrashReporter.h"
+#import "CrashReporter.h"
 
 #import "PLCrashReportTextFormatter.h"
 #import "PLCrashCompatConstants.h"
+#import "PLCrashAsync.h"
 
 @interface PLCrashReportTextFormatter (PrivateAPI)
 static NSInteger binaryImageSort(id binary1, id binary2, void *context);
@@ -133,31 +134,45 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
                 break;
         }
 
-        /* If we were unable to determine the code type, fall back on the legacy architecture value. */
-        if (codeType == nil) {
-            switch (report.systemInfo.architecture) {
-                case PLCrashReportArchitectureARMv6:
-                case PLCrashReportArchitectureARMv7:
+        /* If we were unable to determine the code type, fall back on the processor info's value. */
+        if (codeType == nil && report.systemInfo.processorInfo.typeEncoding == PLCrashReportProcessorTypeEncodingMach) {
+            switch (report.systemInfo.processorInfo.type) {
+                case CPU_TYPE_ARM:
                     codeType = @"ARM";
                     lp64 = false;
                     break;
-                case PLCrashReportArchitectureX86_32:
+
+                case CPU_TYPE_ARM64:
+                    codeType = @"ARM-64";
+                    lp64 = true;
+                    break;
+
+                case CPU_TYPE_X86:
                     codeType = @"X86";
                     lp64 = false;
                     break;
-                case PLCrashReportArchitectureX86_64:
+
+                case CPU_TYPE_X86_64:
                     codeType = @"X86-64";
                     lp64 = true;
                     break;
-                case PLCrashReportArchitecturePPC:
+
+                case CPU_TYPE_POWERPC:
                     codeType = @"PPC";
                     lp64 = false;
                     break;
+
                 default:
-                    codeType = [NSString stringWithFormat: @"Unknown (%d)", report.systemInfo.architecture];
+                    codeType = [NSString stringWithFormat: @"Unknown (%llu)", report.systemInfo.processorInfo.type];
                     lp64 = true;
                     break;
             }
+        }
+        
+        /* If we still haven't determined the code type, we're totally clueless. */
+        if (codeType == nil) {
+            codeType = @"Unknown";
+            lp64 = true;
         }
     }
 
@@ -167,9 +182,8 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
             hardwareModel = report.machineInfo.modelName;
 
         NSString *incidentIdentifier = @"???";
-        if (report.uuidRef != NULL) {
-            incidentIdentifier = (NSString *) CFUUIDCreateString(NULL, report.uuidRef);
-            [incidentIdentifier autorelease];
+        if (report.uuidRef != nil) {
+            incidentIdentifier = (__bridge_transfer NSString *) CFUUIDCreateString(nil, report.uuidRef);
         }
     
         [text appendFormat: @"Incident Identifier: %@\n", incidentIdentifier];
@@ -336,7 +350,15 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
     
     /* Images. The iPhone crash report format sorts these in ascending order, by the base address */
     [text appendString: @"Binary Images:\n"];
+    uint64_t lastImageBaseAddress = 0;
     for (PLCrashReportBinaryImageInfo *imageInfo in [report.images sortedArrayUsingFunction: binaryImageSort context: nil]) {
+        /* Remove duplicates */
+        uint64_t imageBaseAddress = [imageInfo imageBaseAddress];
+        if (lastImageBaseAddress == imageBaseAddress) {
+            continue;
+        }
+        lastImageBaseAddress = imageBaseAddress;
+
         NSString *uuid;
         /* Fetch the UUID if it exists */
         if (imageInfo.hasImageUUID)
@@ -372,12 +394,16 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
                 case CPU_TYPE_ARM64:
                     /* Apple includes subtype for ARM64 binaries. */
                     switch (imageInfo.codeType.subtype) {
-                        case CPU_SUBTYPE_ARM_ALL:
+                        case CPU_SUBTYPE_ARM64_ALL:
                             archName = @"arm64";
                             break;
 
-                        case CPU_SUBTYPE_ARM_V8:
+                        case CPU_SUBTYPE_ARM64_V8:
                             archName = @"armv8";
+                            break;
+
+                        case CPU_SUBTYPE_ARM64E:
+                            archName = @"arm64e";
                             break;
 
                         default:
@@ -479,12 +505,14 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
     uint64_t pcOffset = 0x0;
     NSString *imageName = @"\?\?\?";
     NSString *symbolString = nil;
-    
-    PLCrashReportBinaryImageInfo *imageInfo = [report imageForAddress: frameInfo.instructionPointer];
+
+    PLCrashReportBinaryImageInfo *imageInfo = [report imageForAddress:frameInfo.instructionPointer];
     if (imageInfo != nil) {
         imageName = [imageInfo.imageName lastPathComponent];
         baseAddress = imageInfo.imageBaseAddress;
         pcOffset = frameInfo.instructionPointer - imageInfo.imageBaseAddress;
+    } else if (frameInfo.instructionPointer) {
+        PLCF_DEBUG("Cannot find image for 0x%" PRIx64, frameInfo.instructionPointer);
     }
 
     /* If symbol info is available, the format used in Apple's reports is Sym + OffsetFromSym. Otherwise,
@@ -492,8 +520,7 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
     if (frameInfo.symbolInfo != nil) {
         NSString *symbolName = frameInfo.symbolInfo.symbolName;
 
-        /* Apple strips the _ symbol prefix in their reports. Only OS X makes use of an
-         * underscore symbol prefix by default. */
+        /* Apple strips the _ symbol prefix in their reports. */
         if ([symbolName rangeOfString: @"_"].location == 0 && [symbolName length] > 1) {
             switch (report.systemInfo.operatingSystem) {
                 case PLCrashReportOperatingSystemMacOSX:
@@ -504,7 +531,7 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
                     break;
 
                 default:
-                    NSLog(@"Symbol prefix rules are unknown for this OS!");
+                    PLCF_DEBUG("Symbol \"%s\" prefix rules are unknown for this OS!", [symbolName UTF8String]);
                     break;
             }
         }
