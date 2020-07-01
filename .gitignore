@@ -5,6 +5,7 @@
 ## Build generated
 build/
 DerivedData/
+Documentation/API/
 
 ## Various settings
 *.pbxuser
@@ -18,6 +19,7 @@ DerivedData/
 xcuserdata/
 
 ## Other
+/debug.txt
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
@@ -27,7 +29,6 @@ xcuserdata/
 *.ipa
 *.dSYM.zip
 *.dSYM
-
 
 # Mac
 .DS_Store

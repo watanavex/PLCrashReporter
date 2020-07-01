@@ -62,7 +62,7 @@ namespace async {
  * on their natural order; eg, the top of the stack will be the last value in this array. If the initial stack
  * state should be empty, this value may be NULL, and @a initial_count should be 0.
  * @param initial_count Number of values in the @a initial_state array.
- * @param result[out] On success, the evaluation result. As per DWARF 3 section 2.5.1, this will be
+ * @param[out] result On success, the evaluation result. As per DWARF 3 section 2.5.1, this will be
  * the top-most element on the evaluation stack. If the stack is empty, an error will be returned
  * and no value will be written to this parameter.
  *
@@ -135,10 +135,11 @@ plcrash_error_t plcrash_async_dwarf_expression_eval (plcrash_async_mobject_t *mo
 })
 
     /* Macro to fetch register valeus; handles unsupported register numbers and missing registers values */
-#define dw_thread_regval(_dw_regnum) ({ \
+#define dw_thread_regval(dw_regnum) ({ \
     plcrash_regnum_t rn; \
+	uint64_t _dw_regnum = dw_regnum; \
     if (!plcrash_async_thread_state_map_dwarf_to_reg(thread_state, _dw_regnum, &rn)) { \
-        PLCF_DEBUG("Unsupported DWARF register value of 0x%" PRIx64, (uint64_t)_dw_regnum);\
+        PLCF_DEBUG("Unsupported DWARF register value of 0x%" PRIx64, _dw_regnum);\
         return PLCRASH_ENOTSUP; \
     } \
 \
@@ -152,7 +153,7 @@ plcrash_error_t plcrash_async_dwarf_expression_eval (plcrash_async_mobject_t *mo
 })
 
     /* A push macro that handles reporting of stack overflow errors */
-#define dw_expr_push(v) if (!stack.push(v)) { \
+#define dw_expr_push(v) if (!stack.push((machine_ptr_s)v)) { \
     PLCF_DEBUG("Hit stack limit; cannot push further values"); \
     return PLCRASH_EINTERNAL; \
 }
@@ -342,13 +343,14 @@ plcrash_error_t plcrash_async_dwarf_expression_eval (plcrash_async_mobject_t *mo
                 
                 /* This can't fail after the swap suceeded */
                 stack.drop();
+                PLCR_FALLTHROUGH;
                 
             case DW_OP_deref: {
                 machine_ptr addr;
                 machine_ptr value;
 
                 dw_expr_pop(&addr);
-                if ((err = plcrash_async_task_memcpy(task, addr, 0, &value, sizeof(value))) != PLCRASH_ESUCCESS) {
+                if ((err = plcrash_async_task_memcpy(task, (pl_vm_address_t) addr, 0, &value, sizeof(value))) != PLCRASH_ESUCCESS) {
                     PLCF_DEBUG("DW_OP_deref referenced an invalid target address 0x%" PRIx64, (uint64_t) addr);
                     return err;
                 }
@@ -371,6 +373,7 @@ plcrash_error_t plcrash_async_dwarf_expression_eval (plcrash_async_mobject_t *mo
 
                 /* This can't fail after the swap suceeded */
                 stack.drop();
+                PLCR_FALLTHROUGH;
 
             case DW_OP_deref_size: {
                 /* Fetch the target size */
@@ -391,7 +394,7 @@ plcrash_error_t plcrash_async_dwarf_expression_eval (plcrash_async_mobject_t *mo
                         PLCF_DEBUG("DW_OP_deref_size referenced an invalid target address 0x%" PRIx64, (uint64_t) addr); \
                         return err; \
                     } \
-                    value = r; \
+                    value = (machine_ptr)r; \
                     break; \
                 }
                 machine_ptr value = 0;
@@ -443,8 +446,8 @@ plcrash_error_t plcrash_async_dwarf_expression_eval (plcrash_async_mobject_t *mo
                     return PLCRASH_EINVAL;
                 }
                 
-                machine_ptr result = dividend / divisor;
-                dw_expr_push(result);
+                machine_ptr quotient = dividend / divisor;
+                dw_expr_push(quotient);
                 break;
             }
                 
@@ -469,8 +472,8 @@ plcrash_error_t plcrash_async_dwarf_expression_eval (plcrash_async_mobject_t *mo
                     return PLCRASH_EINVAL;
                 }
                 
-                machine_ptr result = dividend % divisor;
-                dw_expr_push(result);
+                machine_ptr remainder = dividend % divisor;
+                dw_expr_push(remainder);
                 break;
             }
                 
@@ -625,22 +628,22 @@ plcrash_error_t plcrash_async_dwarf_expression_eval (plcrash_async_mobject_t *mo
             }
                 
             case DW_OP_skip: {
-                int16_t offset = dw_expr_read_int(int16_t);
-                if (!opstream.skip(offset)) {
-                    PLCF_DEBUG("DW_OP_skip offset %" PRId16 " falls outside of opcode range", offset);
+                int16_t skipOffset = dw_expr_read_int(int16_t);
+                if (!opstream.skip(skipOffset)) {
+                    PLCF_DEBUG("DW_OP_skip offset %" PRId16 " falls outside of opcode range", skipOffset);
                     return PLCRASH_EINVAL;
                 }
                 break;
             }
                 
             case DW_OP_bra: {
-                int16_t offset = dw_expr_read_int(int16_t);
+                int16_t skipOffset = dw_expr_read_int(int16_t);
                 machine_ptr cond;
 
                 dw_expr_pop(&cond);
                 if (cond != 0) {
-                    if (!opstream.skip(offset)) {
-                        PLCF_DEBUG("DW_OP_bra offset %" PRId16 " falls outside of opcode range", offset);
+                    if (!opstream.skip(skipOffset)) {
+                        PLCF_DEBUG("DW_OP_bra offset %" PRId16 " falls outside of opcode range", skipOffset);
                         return PLCRASH_EINVAL;
                     }
                 }
@@ -723,7 +726,7 @@ template plcrash_error_t plcrash_async_dwarf_expression_eval<uint64_t, int64_t> 
                                                                                  uint64_t initial_state[],
                                                                                  size_t initial_count,
                                                                                  uint64_t *result);
-/**
+/*
  * @}
  */
     

@@ -91,6 +91,9 @@ typedef struct plcrash_async_macho {
     const plcrash_async_byteorder_t *byteorder;
 } plcrash_async_macho_t;
 
+// Use only filename in debug logging because PLCF_DEBUG has length limit.
+#define PLCF_DEBUG_IMAGE_NAME(image) (strrchr(image->name, '/') + 1)
+
 /**
  * @internal
  *
@@ -182,7 +185,7 @@ typedef struct plcrash_async_macho_symtab_reader {
  * @param address The symbol address.
  * @param name The symbol name. The callback is responsible for copying this value, as its backing storage is not gauranteed to exist
  * after the callback returns.
- * @param context The API client's supplied context value.
+ * @param ctx The API client's supplied context value.
  */
 typedef void (*pl_async_macho_found_symbol_cb)(pl_vm_address_t address, const char *name, void *ctx);
 
@@ -217,7 +220,7 @@ void plcrash_async_macho_mapped_segment_free (pl_async_macho_mapped_segment_t *s
 
 void plcrash_nasync_macho_free (plcrash_async_macho_t *image);
 
-/**
+/*
  * @}
  */
     

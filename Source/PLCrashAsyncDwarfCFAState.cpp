@@ -191,7 +191,7 @@ bool dwarf_cfa_state<machine_ptr, machine_ptr_s>::get_register_rule (dwarf_cfa_s
         }
         
         /* Existing entry found, we can re-use it directly */
-        *value = entry->value;
+        *value = (machine_ptr)entry->value;
         *rule = (plcrash_dwarf_cfa_reg_rule_t) entry->rule;
         return true;
     }
@@ -336,19 +336,19 @@ bool dwarf_cfa_state_iterator<machine_ptr, machine_ptr_s>::next (dwarf_cfa_state
     
     typename dwarf_cfa_state<machine_ptr, machine_ptr_s>::dwarf_cfa_reg_entry_t *entry = &_stack->_entries[_cur_entry_idx];
     *regnum = entry->regnum;
-    *value = entry->value;
+    *value = (machine_ptr)entry->value;
     *rule = (plcrash_dwarf_cfa_reg_rule_t) entry->rule;
     return true;
 }
 
 /* Provide explicit 32/64-bit instantiations */
-template class dwarf_cfa_state<uint32_t, int32_t>;
-template class dwarf_cfa_state_iterator<uint32_t, int32_t>;
+template class plcrash::async::dwarf_cfa_state<uint32_t, int32_t>;
+template class plcrash::async::dwarf_cfa_state_iterator<uint32_t, int32_t>;
 
-template class dwarf_cfa_state<uint64_t, int64_t>;
-template class dwarf_cfa_state_iterator<uint64_t, int64_t>;
+template class plcrash::async::dwarf_cfa_state<uint64_t, int64_t>;
+template class plcrash::async::dwarf_cfa_state_iterator<uint64_t, int64_t>;
 
-/**
+/*
  * @}
  */
 

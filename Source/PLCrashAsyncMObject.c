@@ -26,10 +26,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "PLCrashAsyncMObject.h"
+#include "PLCrashAsyncMObject.h"
 
-#import <stdint.h>
-#import <inttypes.h>
+#include <stdint.h>
+#include <inttypes.h>
 
 /**
  * @internal
@@ -46,14 +46,14 @@
  * VM_PROT_READ.
  *
  * @param task The task from which the memory will be mapped.
- * @param task_address The task-relative address of the memory to be mapped. This is not required to fall on a page boundry.
+ * @param task_addr The task-relative address of the memory to be mapped. This is not required to fall on a page boundry.
  * @param length The total size of the mapping to create.
  * @param require_full If false, short mappings will be permitted in the case where a memory object of the requested length
  * does not exist at the target address. It is the caller's responsibility to validate the resulting length of the
  * mapping, eg, using plcrash_async_mobject_remap_address() and similar. If true, and the entire requested page range is
  * not valid, the mapping request will fail.
- * @param result[out] The in-process address at which the pages were mapped.
- * @param result_length[out] The total size, in bytes, of the mapped pages.
+ * @param[out] result The in-process address at which the pages were mapped.
+ * @param[out] result_length The total size, in bytes, of the mapped pages.
  *
  * @return On success, returns PLCRASH_ESUCCESS. On failure, one of the plcrash_error_t error values will be returned, and no
  * mapping will be performed.
@@ -201,7 +201,7 @@ static plcrash_error_t plcrash_async_mobject_remap_pages_workaround (mach_port_t
 #ifdef PL_HAVE_MACH_VM
         kt = mach_vm_map(mach_task_self(), &target_address, entry_length, 0x0, VM_FLAGS_FIXED|VM_FLAGS_OVERWRITE, mem_handle, 0x0, TRUE, VM_PROT_READ, VM_PROT_READ, VM_INHERIT_COPY);
 #else
-        kt = vm_map(mach_task_self(), &target_address, entry_length, 0x0, VM_FLAGS_FIXED|VM_FLAGS_OVERWRITE, mem_handle, 0x0, TRUE, VM_PROT_READ, VM_PROT_READ, VM_INHERIT_COPY);
+        kt = vm_map(mach_task_self(), &target_address, (vm_size_t) entry_length, 0x0, VM_FLAGS_FIXED|VM_FLAGS_OVERWRITE, mem_handle, 0x0, TRUE, VM_PROT_READ, VM_PROT_READ, VM_INHERIT_COPY);
 #endif /* !PL_HAVE_MACH_VM */
         
         if (kt != KERN_SUCCESS) {
@@ -245,7 +245,7 @@ static plcrash_error_t plcrash_async_mobject_remap_pages_workaround (mach_port_t
  *
  * @param mobj Memory object to be initialized.
  * @param task The task from which the memory will be mapped.
- * @param task_address The task-relative address of the memory to be mapped. This is not required to fall on a page boundry.
+ * @param task_addr The task-relative address of the memory to be mapped. This is not required to fall on a page boundry.
  * @param length The total size of the mapping to create.
  * @param require_full If false, short mappings will be permitted in the case where a memory object of the requested length
  * does not exist at the target address. It is the caller's responsibility to validate the resulting length of the
@@ -365,12 +365,12 @@ bool plcrash_async_mobject_verify_local_pointer (plcrash_async_mobject_t *mobj, 
  */
 void *plcrash_async_mobject_remap_address (plcrash_async_mobject_t *mobj, pl_vm_address_t address, pl_vm_off_t offset, size_t length) {
     /* Map into our memory space */
-    pl_vm_address_t remapped = address - mobj->vm_slide;
+    pl_vm_address_t remapped = address - (pl_vm_address_t) mobj->vm_slide;
 
     if (!plcrash_async_mobject_verify_local_pointer(mobj, (uintptr_t) remapped, offset, length))
         return NULL;
 
-    return (void *) remapped + offset;
+    return (void *) (remapped + offset);
 }
 
 /**
@@ -484,6 +484,6 @@ void plcrash_async_mobject_free (plcrash_async_mobject_t *mobj) {
     mach_port_mod_refs(mach_task_self(), mobj->task, MACH_PORT_RIGHT_SEND, -1);
 }
 
-/**
+/*
  * @} plcrash_async
  */

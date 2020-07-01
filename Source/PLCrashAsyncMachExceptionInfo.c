@@ -42,7 +42,7 @@
  * Map a Mach exception to its BSD signal representation.
  *
  * @param exception_type Mach exception type.
- * @param code Mach exception codes.
+ * @param codes Mach exception codes.
  * @param code_count The number of codes provided.
  * @param cpu_type The target architecture on which the exception was generated, encoded as a Mach-O CPU type. Interpreting Mach exception data is
  * architecture-specific. If the CPU type is unknown, CPU_TYPE_ANY may be provided.
@@ -75,22 +75,22 @@ bool plcrash_async_mach_exception_get_siginfo (exception_type_t exception_type, 
                 siginfo->si_signo = SIGBUS;
             }
 
-            siginfo->si_addr = subcode;
+            siginfo->si_addr = (void *)subcode;
             break;
             
         case EXC_BAD_INSTRUCTION:
             siginfo->si_signo = SIGILL;
-            siginfo->si_addr = subcode;
+            siginfo->si_addr = (void *)subcode;
             break;
             
         case EXC_ARITHMETIC:
             siginfo->si_signo = SIGFPE;
-            siginfo->si_addr = subcode;
+            siginfo->si_addr = (void *)subcode;
             break;
             
         case EXC_EMULATION:
             siginfo->si_signo = SIGEMT;
-            siginfo->si_addr = subcode;
+            siginfo->si_addr = (void *)subcode;
             break;
             
         case EXC_SOFTWARE:
@@ -116,12 +116,12 @@ bool plcrash_async_mach_exception_get_siginfo (exception_type_t exception_type, 
                     break;
             }
 
-            siginfo->si_addr = subcode;
+            siginfo->si_addr = (void *)subcode;
             break;
             
         case EXC_BREAKPOINT:
             siginfo->si_signo = SIGTRAP;
-            siginfo->si_addr = subcode;
+            siginfo->si_addr = (void *)subcode;
             break;
             
         default:
