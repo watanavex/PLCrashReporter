@@ -1,8 +1,0 @@
-framework module KarteCrashReporter {
-  umbrella header "CrashReporter.h"
-
-  export *
-  module * { export * }
-  
-  link framework "KarteCrashReporter"
-}
