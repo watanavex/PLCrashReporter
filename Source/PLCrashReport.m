@@ -26,8 +26,14 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#if __has_include(<CrashReporter/PLCrashReport.h>)
+#import <CrashReporter/CrashReporter.h>
+#import <CrashReporter/PLCrashReport.h>
+#else
 #import "CrashReporter.h"
 #import "PLCrashReport.h"
+#endif
+
 #import "PLCrashReport.pb-c.h"
 #import "PLCrashAsyncThread.h"
 
@@ -163,6 +169,13 @@ static void populate_nserror (NSError **error, PLCrashReporterError code, NSStri
     if (_decoder->crashReport->exception != NULL) {
         _exceptionInfo = [self extractExceptionInfo: _decoder->crashReport->exception error: outError];
         if (!_exceptionInfo)
+            goto error;
+    }
+
+    /* Custom data, if it is available */
+    if (_decoder->crashReport->has_custom_data) {
+        _customData = [NSData dataWithBytes:_decoder->crashReport->custom_data.data length:_decoder->crashReport->custom_data.len];
+        if (!_customData)
             goto error;
     }
 

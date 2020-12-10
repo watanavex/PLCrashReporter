@@ -26,8 +26,13 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "PLCrashReporter.h"
+#if __has_include(<CrashReporter/CrashReporter.h>)
+#import <CrashReporter/CrashReporter.h>
+#import <CrashReporter/PLCrashReporter.h>
+#else
 #import "CrashReporter.h"
+#import "PLCrashReporter.h"
+#endif
 
 #import "PLCrashFeatureConfig.h"
 
@@ -51,10 +56,6 @@
 #import <mach-o/dyld.h>
 
 #import <stdatomic.h>
-
-#define NSDEBUG(msg, args...) {\
-    NSLog(@"[PLCrashReporter] " msg, ## args); \
-}
 
 /** @internal
  * CrashReporter cache directory name. */
@@ -331,7 +332,7 @@ static void image_add_callback (const struct mach_header *mh, intptr_t vmaddr_sl
     
     /* Look up the image info */
     if (dladdr(mh, &info) == 0) {
-        NSLog(@"%s: dladdr(%p, ...) failed", __FUNCTION__, mh);
+        PLCR_LOG("%s: dladdr(%p, ...) failed", __FUNCTION__, mh);
         return;
     }
 
@@ -585,8 +586,12 @@ static PLCrashReporter *sharedReporter = nil;
     assert(_applicationIdentifier != nil);
     assert(_applicationVersion != nil);
     plcrash_log_writer_init(&signal_handler_context.writer, _applicationIdentifier, _applicationVersion, _applicationMarketingVersion, [self mapToAsyncSymbolicationStrategy: _config.symbolicationStrategy], false);
-    
-    
+
+    /* Set custom data, if already set before enabling */
+    if (self.customData != nil) {
+        plcrash_log_writer_set_custom_data(&signal_handler_context.writer, self.customData);
+    }
+
     /* Enable the signal handler */
     switch (_config.signalHandlerType) {
         case PLCrashReporterSignalHandlerTypeBSD:
@@ -709,6 +714,11 @@ static plcrash_error_t plcr_live_report_callback (plcrash_async_thread_state_t *
     /* Initialize the output context */
     plcrash_log_writer_init(&writer, _applicationIdentifier, _applicationVersion, _applicationMarketingVersion, [self mapToAsyncSymbolicationStrategy: _config.symbolicationStrategy], true);
     plcrash_async_file_init(&file, fd, MAX_REPORT_BYTES);
+
+    /* Set custom data, if already set before enabling */
+    if (self.customData != nil) {
+        plcrash_log_writer_set_custom_data(&writer, self.customData);
+    }
     
     /* Mock up a SIGTRAP-based signal info */
     plcrash_log_bsd_signal_info_t bsd_signal_info;
@@ -740,13 +750,15 @@ static plcrash_error_t plcr_live_report_callback (plcrash_async_thread_state_t *
     /* Check for write failure */
     NSData *data;
     if (err != PLCRASH_ESUCCESS) {
-        NSLog(@"Write failed with error %s", plcrash_async_strerror(err));
+        PLCR_LOG("Write failed with error %s", plcrash_async_strerror(err));
         plcrash_populate_error(outError, PLCrashReporterErrorUnknown, @"Failed to write the crash report to disk", nil);
         data = nil;
         goto cleanup;
     }
 
-    data = [NSData dataWithContentsOfFile: [NSString stringWithUTF8String: path]];
+    data = [NSData dataWithContentsOfFile:[NSString stringWithUTF8String: path]
+                                  options:NSDataReadingMappedAlways | NSDataReadingUncached
+                                    error:outError];
     if (data == nil) {
         /* This should only happen if our data is deleted out from under us */
         plcrash_populate_error(outError, PLCrashReporterErrorUnknown, NSLocalizedString(@"Unable to open live crash report for reading", nil), nil);
@@ -759,7 +771,7 @@ cleanup:
 
     if (unlink(path) != 0) {
         /* This shouldn't fail, but if it does, there's no use in returning nil */
-        NSLog(@"Failure occured deleting live crash report: %s", strerror(errno));
+        PLCR_LOG("Failure occured deleting live crash report: %s", strerror(errno));
     }
 
     free(path);
@@ -820,6 +832,17 @@ cleanup:
     /* Re-configure the saved callbacks */
     crashCallbacks.context = callbacks->context;
     crashCallbacks.handleSignal = callbacks->handleSignal;
+}
+
+/**
+ * Set the custom data that will be saved in the crash report along the rest of information,
+ * It deletes any previous custom data configured.
+ *
+ * @param customData A string with the custom data to save.
+ */
+- (void) setCustomData: (NSData *) customData {
+    _customData = customData;
+    plcrash_log_writer_set_custom_data(&signal_handler_context.writer, customData);
 }
 
 @end
@@ -888,13 +911,13 @@ cleanup:
             return nil;
         }
 
-        NSDEBUG(@"Warning -- bundle identifier, using process name %s", progname);
+        PLCR_LOG("Warning -- bundle identifier, using process name %s", progname);
         bundleIdentifier = [NSString stringWithUTF8String: progname];
     }
 
     /* Verify that the version is available */
     if (bundleVersion == nil) {
-        NSDEBUG(@"Warning -- bundle version unavailable");
+        PLCR_LOG("Warning -- bundle version unavailable");
         bundleVersion = @"";
     }
     

@@ -187,7 +187,6 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
         }
     
         [text appendFormat: @"Incident Identifier: %@\n", incidentIdentifier];
-        [text appendFormat: @"CrashReporter Key:   TODO\n"];
         [text appendFormat: @"Hardware Model:      %@\n", hardwareModel];
     }
     
@@ -372,7 +371,7 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
             switch (imageInfo.codeType.type) {
                 case CPU_TYPE_ARM:
                     /* Apple includes subtype for ARM binaries. */
-                    switch (imageInfo.codeType.subtype) {
+                    switch (imageInfo.codeType.subtype & ~CPU_SUBTYPE_MASK) {
                         case CPU_SUBTYPE_ARM_V6:
                             archName = @"armv6";
                             break;
@@ -393,7 +392,7 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
                     
                 case CPU_TYPE_ARM64:
                     /* Apple includes subtype for ARM64 binaries. */
-                    switch (imageInfo.codeType.subtype) {
+                    switch (imageInfo.codeType.subtype & ~CPU_SUBTYPE_MASK) {
                         case CPU_SUBTYPE_ARM64_ALL:
                             archName = @"arm64";
                             break;
@@ -512,7 +511,7 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
         baseAddress = imageInfo.imageBaseAddress;
         pcOffset = frameInfo.instructionPointer - imageInfo.imageBaseAddress;
     } else if (frameInfo.instructionPointer) {
-        PLCF_DEBUG("Cannot find image for 0x%" PRIx64, frameInfo.instructionPointer);
+        PLCR_LOG("Cannot find image for 0x%" PRIx64, frameInfo.instructionPointer);
     }
 
     /* If symbol info is available, the format used in Apple's reports is Sym + OffsetFromSym. Otherwise,
@@ -531,7 +530,7 @@ static NSInteger binaryImageSort(id binary1, id binary2, void *context);
                     break;
 
                 default:
-                    PLCF_DEBUG("Symbol \"%s\" prefix rules are unknown for this OS!", [symbolName UTF8String]);
+                    PLCR_LOG("Symbol \"%s\" prefix rules are unknown for this OS!", [symbolName UTF8String]);
                     break;
             }
         }
