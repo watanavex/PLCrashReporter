@@ -18,5 +18,5 @@ Pod::Spec.new do |spec|
   spec.platform     = :ios, "9.0"
 
   spec.source       = { :git => "https://github.com/plaidev/PLCrashReporter.git", :tag => "#{spec.version}-patch" }
-  spec.vendored_frameworks = "CrashReporter.framework"
+  spec.vendored_frameworks = "CrashReporter.xcframework"
 end
