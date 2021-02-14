@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = "KarteCrashReporter"
-  spec.version      = "1.8.1"
+  spec.version      = "1.8.2"
   spec.summary      = "Fork of the Plausible Labs PLCrashReporter repo."
   spec.description  = "This fork contains code that is not part of the core PLCrashReporter distribution.  This software is not provided by or maintained by Plausible Labs."
 
