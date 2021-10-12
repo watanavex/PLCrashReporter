@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.3
 
 import PackageDescription
 
@@ -10,7 +10,7 @@ let package = Package(
         .tvOS(.v9)
     ],
     products: [
-        .library(name: "CrashReporter", targets: ["CrashReporter"])
+        .library(name: "PLCrashReporter", targets: ["PLCrashReporter"])
     ],
     targets: [
         .target(
@@ -42,6 +42,11 @@ let package = Package(
             linkerSettings: [
                 .linkedFramework("Foundation")
             ]
-        )
+        ),
+        .binaryTarget(
+            name: "PLCrashReporter", 
+            url: "https://github.com/watanavex/PLCrashReporter/releases/download/1.9.0/PLCrashReporter.xcframework.zip", 
+            checksum: "cb35d80ed2178e3d3ea33c6531f0ade3ae2919464355f80f3d5c9ff52190f69c"
+        ),
     ]
 )
